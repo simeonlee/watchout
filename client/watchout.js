@@ -3,36 +3,41 @@
   var options = {
     width: $(window).width(),
     height: $(window).height(),
-    enemies: 30
   };
+
+  var circleData = [
+    { 'cx': 100, 'cy': 100, 'r': 25, 'color': 'rgba(200, 200, 200, 0.6)' },
+    { 'cx': 250, 'cy': 250, 'r': 25, 'color': 'rgba(200, 200, 200, 0.6)' }
+  ];
+
 
   var board = d3.select('.board')
     .append('svg')
     .attr('width', options.width)
-    .attr('height', options.height)
+    .attr('height', options.height);
 
-  board.append('circle')
-    .attr('cx', 25)
-    .attr('cy', 25)
-    .attr('r', 25)
-    .style('fill', 'white');
-
-  var data = [50, 100, 150, 200, 250];
-
-  var g = board.data(data)
+  var circles = board.selectAll('circle')
+    .data(circleData)
     .enter()
-    .append('div')
-    .attr('transform', 'translate(0, 10)')
+    .append('circle');
 
-  var circles = g.selectAll('circle')
-    .data(data)
+  var circleAttributes = circles
+    .attr('cx', function(d) { return d.cx; })
+    .attr('cy', function(d) { return d.cy; })
+    .attr('r', function(d) { return d.r; })
+    .style('fill', function(d) { return d.color; });
+    
+  var text = board.selectAll('text')
+    .data(circleData)
+    .enter()
+    .append('text');
 
-  circles.enter()
-    .append('circle')
-    .attr({
-      cx: function(d, i) { return d; },
-      cy: 118,
-      r: 14
-    })
+  var textLabels = text
+    .attr('x', function(d) { return d.cx; })
+    .attr('y', function(d) { return d.cy + 4; })
+    .text( function(d) { return d.cx + ', ' + d.cy; })
+    .style('font-size', '10px')
+    .style('fill', 'white')
+    .style('text-anchor', 'middle');
 
 })();
