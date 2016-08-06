@@ -10,7 +10,7 @@
   var options = {
     width: vw,
     height: vh,
-    enemies: 15
+    enemies: 5
   };
 
   var board = d3.select('svg')
@@ -18,6 +18,7 @@
     .attr('height', options.height);
 
   var circleData = [];
+
   var createEnemy = function() {
     var enemy = {};
     enemy.cx = Math.floor( (Math.random() * vw) * 100) / 100;
@@ -36,10 +37,20 @@
     player.type = 'player';
     return player;
   };
+  var createISS = function() {
+    var iss = {};
+    iss.cx = vw / 2;
+    iss.cy = vh / 2;
+    iss.r = 20 + 'px';
+    iss.color = 'rgba(200, 200, 200, 0.6)';
+    iss.type = 'iss';
+    return iss;
+  };
 
   for ( var i = 0; i < options.enemies; i++ ) {
     circleData.push( createEnemy() );
   }
+  // circleData.push( createISS() );
   circleData.push( createPlayer() );
 
   var circles = board.selectAll('circle')
@@ -55,16 +66,16 @@
     .style({
       'fill': (d) => {
         if (d.type === 'enemy') {
-          return 'url(#image)';
-        } else {
-          return 'white';
+          return 'url(#enemy_img)';
+        } else if (d.type === 'player') {
+          return 'url(#player_img)';
         }
       }
     });
-    // .classed('circle', true);
 
   var enemies = board.selectAll('.enemy');
   var player = board.select('.player');
+  // var iss = board.select('.iss');
 
   board.on('mousemove', () => {
     player
@@ -98,9 +109,9 @@
       d3.select('.current span').text(currentScore);
       collided = false;
     }
-    setTimeout(checkCollision, 10 + delay);
+    setTimeout(checkCollision, 50 + delay);
   };
-  setTimeout(checkCollision, 10 + delay);
+  setTimeout(checkCollision, 50 + delay);
 
   var update = () => {
     enemies.transition()
